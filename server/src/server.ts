@@ -2,7 +2,6 @@ import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import { json } from 'body-parser';
 import { buildSchema } from 'graphql';
-import routes from './routes/index';
 
 // initial express app
 const app = express();
@@ -17,8 +16,6 @@ const schema = buildSchema(`
 // add middleware to express app
 app.use(json());
 
-app.use('/api', routes);
-
 app.use(
   '/graphql',
   graphqlHTTP({
@@ -28,10 +25,10 @@ app.use(
 );
 
 // reserve port to listen
-app.listen(3000, (err: Error) => {
+app.listen(4000, (err: Error) => {
   if (err) {
     throw Error;
   }
 
-  console.log('server is running on port 3000');
+  console.log('server is running on port 4000');
 });
