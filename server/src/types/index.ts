@@ -6,7 +6,16 @@ import fields from './fields';
 // define rootType
 const rootType = new GraphQLObjectType({
   name: 'Root',
-  fields
+  fields: fields.query
 });
 
-export const schema = new GraphQLSchema({ query: rootType });
+// define mutation
+const mutationType = new GraphQLObjectType({
+  name: 'mutation',
+  fields: fields.mutation
+});
+
+export const schema = new GraphQLSchema({
+  query: rootType,
+  mutation: mutationType
+});

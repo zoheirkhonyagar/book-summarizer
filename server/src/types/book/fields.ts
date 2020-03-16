@@ -2,6 +2,7 @@ import { Field } from '../../interfaces/field';
 import { bookType } from './book';
 import Book from './../../models/book';
 
+// define queries
 // define books field
 const books: Field = {
   type: bookType,
@@ -10,6 +11,11 @@ const books: Field = {
   }
 };
 
+// define mutations
+
 export default {
-  books
+  query: {
+    books
+  },
+  mutation: {}
 };

@@ -2,6 +2,12 @@ import bookFields from './book/fields';
 import greetingFields from './greeting/fields';
 
 export default {
-  ...bookFields,
-  ...greetingFields
+  query: {
+    ...bookFields.query,
+    ...greetingFields.query
+  },
+  mutation: {
+    ...bookFields.mutation,
+    ...greetingFields.mutation
+  }
 };
