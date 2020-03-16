@@ -1,10 +1,17 @@
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
+import mongoose from 'mongoose';
 import { json } from 'body-parser';
 import { schema } from './types/';
 
 // initial express app
 const app = express();
+
+// connect to mongodb
+mongoose.connect('mongodb://localhost/book-summarizer');
+mongoose.connection.once('open', () => {
+  console.log('connected to db');
+});
 
 // add middleware to express app
 app.use(json());
