@@ -1,9 +1,9 @@
 import mongoose, { Schema } from 'mongoose';
 
-const BookSchema = new Schema({
+const bookSchema = new Schema({
   name: String,
   genre: String,
   authorId: String
 });
 
-export default mongoose.model('Book', BookSchema);
+export default mongoose.model('Book', bookSchema);
