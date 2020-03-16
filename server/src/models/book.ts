@@ -1,4 +1,4 @@
-import mongoose, { Schema, Mongoose } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const BookSchema = new Schema({
   name: String,
