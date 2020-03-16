@@ -1,5 +1,5 @@
-import bookFields from './book/resolvers';
-import greetingFields from './greeting/resolvers';
+import bookFields from './book/fields';
+import greetingFields from './greeting/fields';
 
 export default {
   ...bookFields,

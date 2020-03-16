@@ -1,10 +1,9 @@
-import { Resolver } from './../../interfaces/resolver';
+import { Field } from '../../interfaces/field';
 import { GraphQLString } from 'graphql';
 
-// define greeting resolvers
-const greeting: Resolver = {
+// define greeting field
+const greeting: Field = {
   type: GraphQLString,
-  args: {},
   resolve() {
     return 'Hello World!';
   }

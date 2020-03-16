@@ -1,7 +1,7 @@
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import { json } from 'body-parser';
-import { schema } from './types/index';
+import { schema } from './types/';
 
 // initial express app
 const app = express();

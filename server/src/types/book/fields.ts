@@ -1,8 +1,8 @@
-import { Resolver } from './../../interfaces/resolver';
+import { Field } from '../../interfaces/field';
 import { bookType } from './book';
 
-// create books resolver
-const books: Resolver = {
+// define books field
+const books: Field = {
   type: bookType,
   resolve(parent, args) {
     return {
