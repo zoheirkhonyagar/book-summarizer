@@ -1,7 +1,7 @@
 import { Resolver } from './../../interfaces/resolver';
-import { GraphQLString } from 'graphql';
 import { bookType } from './book';
 
+// create books resolver
 const books: Resolver = {
   type: bookType,
   resolve(parent, args) {
