@@ -1,14 +1,19 @@
 import { GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql';
 
+// import fields
+import fields from './fields';
+
 const rootType = new GraphQLObjectType({
   name: 'Root',
   fields: {
     greeting: {
       type: GraphQLString,
-      resolve(parent: any, args: any) {
+      args: {},
+      resolve(parent, args) {
         return 'Hello World!';
       }
-    }
+    },
+    ...fields
   }
 });
 
