@@ -2,6 +2,7 @@ import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import { json } from 'body-parser';
 import { buildSchema } from 'graphql';
+import routes from './routes/index';
 
 // initial express app
 const app = express();
@@ -13,8 +14,11 @@ const schema = buildSchema(`
   }
 `);
 
-// add middleware to
+// add middleware to express app
 app.use(json());
+
+app.use('/api', routes);
+
 app.use(
   '/graphql',
   graphqlHTTP({
