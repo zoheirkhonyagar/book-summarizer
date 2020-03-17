@@ -12,6 +12,7 @@
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-prettier": "^3.1.2",
+    "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
     "ts-node": "3.3.0",
     "typescript": "3.3.3333"
@@ -27,7 +28,7 @@
     "typeorm": "0.2.24"
   },
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "start": "nodemon --exec ts-node src/index.ts"
   },
   "repository": {
     "type": "git",
