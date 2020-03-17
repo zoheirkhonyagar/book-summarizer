@@ -1,4 +1,4 @@
-import { GraphQLList, GraphQLString, GraphQLInt, GraphQLID } from 'graphql';
+import { GraphQLList, GraphQLString, GraphQLID } from 'graphql';
 import { Field } from './../../interfaces/field';
 import { bookType } from './book';
 import Book from './../../models/book';
@@ -7,7 +7,7 @@ import Book from './../../models/book';
 
 // define books query to get list of all books
 const books: Field = {
-  type: bookType,
+  type: GraphQLList(bookType),
   resolve(parent, args) {
     return Book.find({});
   }
