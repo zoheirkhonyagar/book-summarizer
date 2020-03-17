@@ -1,7 +1,7 @@
 import { GraphQLList, GraphQLString, GraphQLID } from 'graphql';
-import { Field } from './../../interfaces/field';
+import { Field } from '../../interfaces/field';
 import { quoteType } from './quote';
-import Quote from './../../models/quote';
+import Quote from '../../models/quote';
 
 // define queries
 // define quotes field

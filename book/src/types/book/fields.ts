@@ -1,7 +1,7 @@
 import { GraphQLList, GraphQLString, GraphQLID } from 'graphql';
-import { Field } from './../../interfaces/field';
+import { Field } from '../../interfaces/field';
 import { bookType } from './book';
-import Book from './../../models/book';
+import Book from '../../models/book';
 
 // define queries
 

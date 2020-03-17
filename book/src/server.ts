@@ -3,7 +3,7 @@ import cors from 'cors';
 import graphqlHTTP from 'express-graphql';
 import mongoose from 'mongoose';
 import { json } from 'body-parser';
-import { schema } from './types/';
+import { schema } from './types';
 
 // initial express app
 const app = express();
