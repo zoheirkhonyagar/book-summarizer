@@ -1,4 +1,4 @@
-import { Field } from '../../interfaces/field';
+import { Field } from './../../interfaces/field';
 import { GraphQLString } from 'graphql';
 
 // define queries

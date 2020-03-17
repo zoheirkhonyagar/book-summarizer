@@ -1,10 +1,11 @@
-import { GraphQLList, GraphQLString, GraphQLInt } from 'graphql';
-import { Field } from '../../interfaces/field';
+import { GraphQLList, GraphQLString, GraphQLInt, GraphQLID } from 'graphql';
+import { Field } from './../../interfaces/field';
 import { authorType } from './author';
 import Author from './../../models/author';
 
 // define queries
-// define authors field
+
+// define authors query to get list of all authors
 const authors: Field = {
   type: GraphQLList(authorType),
   resolve(parent, args) {
@@ -12,8 +13,20 @@ const authors: Field = {
   }
 };
 
+// define author query to ge an author
+const author: Field = {
+  type: authorType,
+  args: {
+    id: { type: GraphQLID }
+  },
+  resolve(parent, args) {
+    return Author.findById(args.id);
+  }
+};
+
 // define mutations
-// define add author
+
+// define add author mutation to create an author
 const addAuthor: Field = {
   type: authorType,
   args: {
@@ -36,7 +49,8 @@ const addAuthor: Field = {
 
 export default {
   query: {
-    authors
+    authors,
+    author
   },
   mutation: {
     addAuthor
