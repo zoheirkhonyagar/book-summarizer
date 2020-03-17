@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import graphqlHTTP from 'express-graphql';
 import mongoose from 'mongoose';
 import { json } from 'body-parser';
@@ -14,6 +15,8 @@ mongoose.connection.once('open', () => {
 });
 
 // add middleware to express app
+app.use(cors());
+
 app.use(json());
 
 app.use(
