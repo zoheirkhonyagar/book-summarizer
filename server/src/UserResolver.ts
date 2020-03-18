@@ -13,6 +13,8 @@ import { User } from './entity/User';
 import { context } from './context';
 import { createRefreshToken, createAccessToken } from './auth';
 import { isAuth } from './isAuthMiddleware';
+import { getMongoManager } from 'typeorm';
+import { ObjectId } from 'mongodb';
 
 @ObjectType()
 class LoginRepsonse {
@@ -27,6 +29,7 @@ export class UserResolver {
     return 'hi';
   }
 
+  // a query with auth middleware
   @Query(() => String)
   @UseMiddleware(isAuth)
   bye(@Ctx() { payload }: context) {
@@ -34,6 +37,7 @@ export class UserResolver {
     return `your user id is ${payload!.userId}`;
   }
 
+  // get all users
   @Query(() => [User])
   async users() {
     try {
@@ -43,6 +47,33 @@ export class UserResolver {
     }
   }
 
+  @Mutation(() => Boolean)
+  async revokeRefreshTokensForUser(
+    @Arg('userId', () => String) userId: string
+  ) {
+    // get user
+    const user = await User.findOne({
+      where: {
+        _id: new ObjectId(userId)
+      }
+    });
+
+    // check user exist or not
+    if (!user) throw new Error('user not found');
+
+    // increment token version
+    user.tokenVersion = user.tokenVersion + 1;
+
+    // initial mongo manager
+    const manager = getMongoManager();
+
+    // save user
+    await manager.save(user);
+
+    return true;
+  }
+
+  // for login user
   @Mutation(() => LoginRepsonse)
   async login(
     @Arg('email') email: string,
@@ -61,7 +92,6 @@ export class UserResolver {
     if (!valid) throw new Error('Information is wrong');
 
     // login successful
-
     // set refresh token in cookies
     res.cookie('jid', createRefreshToken(user), {
       httpOnly: true

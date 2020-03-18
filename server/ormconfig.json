@@ -1,5 +1,6 @@
 {
   "type": "mongodb",
+  "useUnifiedTopology": true,
   "database": "book-summarizer",
   "synchronize": true,
   "logging": false,
