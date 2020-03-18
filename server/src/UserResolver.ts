@@ -1,6 +1,19 @@
-import { Resolver, Query, Mutation, Arg } from 'type-graphql';
-import { hash } from 'bcryptjs';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Arg,
+  ObjectType,
+  Field
+} from 'type-graphql';
+import { hash, compare } from 'bcryptjs';
 import { User } from './entity/User';
+
+@ObjectType()
+class LoginRepsonse {
+  @Field()
+  accessToken: string;
+}
 
 @Resolver()
 export class UserResolver {
@@ -18,15 +31,43 @@ export class UserResolver {
     }
   }
 
+  @Mutation(() => LoginRepsonse)
+  async login(
+    @Arg('email') email: string,
+    @Arg('password') passord: string
+  ): Promise<LoginRepsonse> {
+    // find user with email
+    const user = await User.findOne({ email });
+
+    // don't allow if user doesn't exist
+    if (!user) throw new Error('Could not find user');
+
+    const valid = compare(passord, user.password);
+
+    if (!valid) throw new Error('Information is wrong');
+
+    // login successful
+
+    return {
+      accessToken: ''
+    };
+  }
+
   @Mutation(() => Boolean)
   async register(
     @Arg('email') email: string,
     @Arg('password') password: string
   ) {
-    // create hashed password
-    const hashedPassword = await hash(password, 12);
+    // find user with email
+    const user = await User.findOne({ email });
+
+    // don't allow if user exist
+    if (user) return false;
 
     try {
+      // create hashed password
+      const hashedPassword = await hash(password, 12);
+
       // create user
       await User.insert({
         email,
