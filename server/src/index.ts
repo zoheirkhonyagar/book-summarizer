@@ -5,13 +5,48 @@ import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { UserResolver } from './UserResolver';
 import { createConnection } from 'typeorm';
+import cookieParser from 'cookie-parser';
+import { verify } from 'jsonwebtoken';
+import { User } from './entity/User';
+import { createAccessToken } from './auth';
+import { ObjectId } from 'mongodb';
 
 (async () => {
   // initial express app
   const app = express();
-
+  app.use(cookieParser());
   // define simple route
   app.get('/', (_req, res) => res.send('hello world'));
+
+  app.post('/refresh_token', async (req, res) => {
+    const token = req.cookies.jid;
+
+    if (!token) {
+      return res.send({ ok: false, accessToken: '' });
+    }
+
+    let payload: any = null;
+    try {
+      payload = verify(token, process.env.REFRESH_TOKEN_SECRET!);
+      console.log(payload);
+    } catch (error) {
+      console.log(error);
+      return res.send({ ok: false, accessToken: '' });
+    }
+
+    // everything is fine and send an access token
+    const user = await User.findOne({
+      where: {
+        _id: new ObjectId(payload.userId)
+      }
+    });
+
+    if (!user) {
+      return res.send({ ok: false, accessToken: '' });
+    }
+
+    return res.send({ ok: true, accessToken: createAccessToken(user) });
+  });
 
   // create connection to database
   await createConnection();
