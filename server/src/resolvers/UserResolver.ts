@@ -9,10 +9,10 @@ import {
   UseMiddleware
 } from 'type-graphql';
 import { hash, compare } from 'bcryptjs';
-import { User } from './entity/User';
-import { context } from './context';
-import { createRefreshToken, createAccessToken } from './auth';
-import { isAuth } from './isAuthMiddleware';
+import { User } from '../entity/User';
+import { context } from '../interfaces/context';
+import { createRefreshToken, createAccessToken } from '../utils/auth';
+import { isAuth } from '../middlewares/isAuthMiddleware';
 import { getMongoManager } from 'typeorm';
 import { ObjectId } from 'mongodb';
 

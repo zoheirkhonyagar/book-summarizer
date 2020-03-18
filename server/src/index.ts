@@ -3,14 +3,14 @@ import 'reflect-metadata';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
-import { UserResolver } from './UserResolver';
+import { UserResolver } from './resolvers/UserResolver';
 import { createConnection } from 'typeorm';
 import cookieParser from 'cookie-parser';
 import { verify } from 'jsonwebtoken';
 import { User } from './entity/User';
-import { createAccessToken, createRefreshToken } from './auth';
+import { createAccessToken, createRefreshToken } from './utils/auth';
 import { ObjectId } from 'mongodb';
-import { sendRefreshToken } from './sendRefreshToken';
+import { sendRefreshToken } from './utils/sendRefreshToken';
 
 (async () => {
   // initial express app
