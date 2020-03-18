@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import 'reflect-metadata';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
@@ -19,7 +20,8 @@ import { createConnection } from 'typeorm';
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [UserResolver]
-    })
+    }),
+    context: ({ req, res }) => ({ req, res })
   });
 
   // register express to apollo server middleware

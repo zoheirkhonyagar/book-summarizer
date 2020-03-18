@@ -4,10 +4,13 @@ import {
   Mutation,
   Arg,
   ObjectType,
-  Field
+  Field,
+  Ctx
 } from 'type-graphql';
 import { hash, compare } from 'bcryptjs';
 import { User } from './entity/User';
+import { context } from './context';
+import { createRefreshToken, createAccessToken } from './auth';
 
 @ObjectType()
 class LoginRepsonse {
@@ -34,7 +37,8 @@ export class UserResolver {
   @Mutation(() => LoginRepsonse)
   async login(
     @Arg('email') email: string,
-    @Arg('password') passord: string
+    @Arg('password') passord: string,
+    @Ctx() { res }: context
   ): Promise<LoginRepsonse> {
     // find user with email
     const user = await User.findOne({ email });
@@ -42,14 +46,20 @@ export class UserResolver {
     // don't allow if user doesn't exist
     if (!user) throw new Error('Could not find user');
 
-    const valid = compare(passord, user.password);
+    // password validation
+    const valid = await compare(passord, user.password);
 
     if (!valid) throw new Error('Information is wrong');
 
     // login successful
 
+    // set refresh token in cookies
+    res.cookie('jid', createRefreshToken(user), {
+      httpOnly: true
+    });
+
     return {
-      accessToken: ''
+      accessToken: createAccessToken(user)
     };
   }
 
