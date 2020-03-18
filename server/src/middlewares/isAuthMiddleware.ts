@@ -7,6 +7,7 @@ export const isAuth: MiddlewareFn<context> = ({ context }, next) => {
   // get authorization header
   const authorization = context.req.headers['authorization'];
 
+  // check authorization is set or not
   if (!authorization) {
     throw new Error('Not authenticated');
   }
