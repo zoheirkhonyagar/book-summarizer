@@ -55,6 +55,7 @@ import { BookResolver } from './resolvers/BookResolver';
       return res.send({ ok: false, accessToken: '' });
     }
 
+    // check token versions
     if (user.tokenVersion !== payload.tokenVersion) {
       return res.send({ ok: false, accessToken: '' });
     }

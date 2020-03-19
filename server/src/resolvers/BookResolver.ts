@@ -10,6 +10,7 @@ import { isAuth } from './../middlewares/isAuthMiddleware';
 import { context } from './../interfaces/context';
 import { Book } from './../entity/Book';
 import { getMongoManager } from 'typeorm';
+import { ObjectId } from 'mongodb';
 
 @Resolver()
 export class BookResolver {
@@ -34,7 +35,10 @@ export class BookResolver {
   async book(@Arg('id') id: string, @Ctx() { payload }: context) {
     try {
       //get book by id
-      const book = await Book.findOne(id);
+      const book = await Book.findOne({
+        _id: new ObjectId(id),
+        userId: payload!.userId
+      });
 
       // check book exist or not
       if (!book) {
