@@ -14,6 +14,7 @@ import { Book } from './../entity/Book';
 import { getMongoManager } from 'typeorm';
 import { ObjectId } from 'mongodb';
 import { User } from './../entity/User';
+import { Quote } from './../entity/Quote';
 
 @Resolver(_of => Book)
 export class BookResolver {
@@ -92,6 +93,24 @@ export class BookResolver {
       const user = await User.findOne(userId);
 
       return user;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+  @FieldResolver(() => [Quote])
+  async quotes(@Root() book: Book) {
+    try {
+      // get and convert bookId to string
+      const bookId: string = book._id.toString();
+
+      // get all book quotes
+      const quotes = await Quote.find({
+        bookId
+      });
+
+      return quotes;
     } catch (error) {
       console.log(error);
       return error;

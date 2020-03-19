@@ -4,13 +4,16 @@ import {
   UseMiddleware,
   Arg,
   Ctx,
-  Mutation
+  Mutation,
+  FieldResolver,
+  Root
 } from 'type-graphql';
 import { Quote } from './../entity/Quote';
 import { isAuth } from './../middlewares/isAuthMiddleware';
 import { context } from './../interfaces/context';
 import { ObjectId } from 'mongodb';
 import { getMongoManager } from 'typeorm';
+import { Book } from './../entity/Book';
 
 @Resolver(_of => Quote)
 export class QuoteResolver {
@@ -24,6 +27,7 @@ export class QuoteResolver {
         userId: payload!.userId
       });
 
+      // check quote exist or not
       if (!quote) {
         throw new Error('quote not found');
       }
@@ -75,6 +79,19 @@ export class QuoteResolver {
 
       return quote;
     } catch (error) {
+      return error;
+    }
+  }
+
+  @FieldResolver(() => Book)
+  async book(@Root() quote: Quote) {
+    try {
+      // get book by id
+      const book = await Book.findOne(quote.bookId);
+
+      return book;
+    } catch (error) {
+      console.log(error);
       return error;
     }
   }
