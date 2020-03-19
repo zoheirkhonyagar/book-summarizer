@@ -29,25 +29,49 @@ export class BookResolver {
     }
   }
 
+  @Query(() => Book)
+  @UseMiddleware(isAuth)
+  async book(@Arg('id') id: string, @Ctx() { payload }: context) {
+    try {
+      //get book by id
+      const book = await Book.findOne(id);
+
+      // check book exist or not
+      if (!book) {
+        throw new Error('book not found');
+      }
+
+      return book;
+    } catch (error) {
+      console.log(error);
+
+      return error;
+    }
+  }
+
   @Mutation(() => Book)
   @UseMiddleware(isAuth)
   async createBook(
     @Arg('name', () => String) name: string,
     @Ctx() { payload }: context
   ) {
-    // create book
-    const book = Book.create({
-      name,
-      userId: payload!.userId
-    });
+    try {
+      // create book
+      const book = Book.create({
+        name,
+        userId: payload!.userId
+      });
 
-    // get instance of mongo manager
-    const manager = getMongoManager();
+      // get instance of mongo manager
+      const manager = getMongoManager();
 
-    // save book into db
-    await manager.save(book);
+      // save book into db
+      await manager.save(book);
+      console.log(book);
 
-    console.log(book);
-    return book;
+      return book;
+    } catch (error) {
+      return error;
+    }
   }
 }
