@@ -6,7 +6,9 @@ import {
   ObjectType,
   Field,
   Ctx,
-  UseMiddleware
+  UseMiddleware,
+  FieldResolver,
+  Root
 } from 'type-graphql';
 import { hash, compare } from 'bcryptjs';
 import { User } from '../entity/User';
@@ -15,6 +17,7 @@ import { createRefreshToken, createAccessToken } from '../utils/auth';
 import { isAuth } from '../middlewares/isAuthMiddleware';
 import { getMongoManager } from 'typeorm';
 import { ObjectId } from 'mongodb';
+import { Book } from './../entity/Book';
 
 @ObjectType()
 class LoginRepsonse {
@@ -22,7 +25,7 @@ class LoginRepsonse {
   accessToken: string;
 }
 
-@Resolver()
+@Resolver(_of => User)
 export class UserResolver {
   @Query(() => String)
   hello() {
@@ -128,5 +131,18 @@ export class UserResolver {
       console.log(error);
       return false;
     }
+  }
+
+  @FieldResolver(() => [Book])
+  async books(@Root() user: User) {
+    // get and convert userId to string
+    const userId: string = user._id.toString();
+
+    // get all user books
+    const books = await Book.find({
+      userId
+    });
+
+    return books;
   }
 }

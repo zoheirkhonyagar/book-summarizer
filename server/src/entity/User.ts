@@ -17,4 +17,8 @@ export class User extends BaseEntity {
 
   @Column()
   tokenVersion: number = 0;
+
+  public getUserId() {
+    return this._id;
+  }
 }

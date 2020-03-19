@@ -14,22 +14,6 @@ import { ObjectId } from 'mongodb';
 
 @Resolver()
 export class BookResolver {
-  @Query(() => [Book])
-  @UseMiddleware(isAuth)
-  async books(@Ctx() { payload }: context) {
-    try {
-      // get all user books by usserId
-      const books = await Book.find({
-        userId: payload!.userId
-      });
-
-      return books;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
-  }
-
   @Query(() => Book)
   @UseMiddleware(isAuth)
   async book(@Arg('id') id: string, @Ctx() { payload }: context) {
@@ -49,6 +33,22 @@ export class BookResolver {
     } catch (error) {
       console.log(error);
 
+      return error;
+    }
+  }
+
+  @Query(() => [Book])
+  @UseMiddleware(isAuth)
+  async books(@Ctx() { payload }: context) {
+    try {
+      // get all user books by usserId
+      const books = await Book.find({
+        userId: payload!.userId
+      });
+
+      return books;
+    } catch (error) {
+      console.log(error);
       return error;
     }
   }
