@@ -9,8 +9,8 @@ import cookieParser from 'cookie-parser';
 import { verify } from 'jsonwebtoken';
 import { User } from './entity/User';
 import { createAccessToken, createRefreshToken } from './utils/auth';
-import { ObjectId } from 'mongodb';
 import { sendRefreshToken } from './utils/sendRefreshToken';
+import { BookResolver } from './resolvers/BookResolver';
 
 (async () => {
   // initial express app
@@ -47,12 +47,8 @@ import { sendRefreshToken } from './utils/sendRefreshToken';
       });
     }
 
-    // everything is fine and send an access token
-    const user = await User.findOne({
-      where: {
-        _id: new ObjectId(payload.userId)
-      }
-    });
+    // find user by userId
+    const user = await User.findOne(payload.userId);
 
     // check user exist or not
     if (!user) {
@@ -66,6 +62,7 @@ import { sendRefreshToken } from './utils/sendRefreshToken';
     // set refresh token in cookies
     sendRefreshToken(res, createRefreshToken(user));
 
+    // everything is fine and send an access token
     return res.send({
       ok: true,
       accessToken: createAccessToken(user)
@@ -78,7 +75,7 @@ import { sendRefreshToken } from './utils/sendRefreshToken';
   // create apollo server
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver]
+      resolvers: [UserResolver, BookResolver]
     }),
     context: ({ req, res }) => ({ req, res })
   });

@@ -1,7 +1,15 @@
-import { Resolver, Query, UseMiddleware, Ctx } from 'type-graphql';
-import { isAuth } from 'src/middlewares/isAuthMiddleware';
-import { context } from 'src/interfaces/context';
-import { Book } from 'src/entity/Book';
+import {
+  Resolver,
+  Query,
+  UseMiddleware,
+  Ctx,
+  Mutation,
+  Arg
+} from 'type-graphql';
+import { isAuth } from './../middlewares/isAuthMiddleware';
+import { context } from './../interfaces/context';
+import { Book } from './../entity/Book';
+// import { getMongoManager } from 'typeorm';
 
 @Resolver()
 export class BookResolver {
@@ -9,19 +17,29 @@ export class BookResolver {
   @UseMiddleware(isAuth)
   async books(@Ctx() { payload }: context) {
     try {
-      // check user id is set or not
-      if (!payload?.userId) {
-        throw new Error(`you dont have access`);
-      }
-
       return await Book.find({
         where: {
-          userId: payload.userId
+          userId: payload!.userId
         }
       });
     } catch (error) {
       console.log(error);
       return error;
     }
+  }
+
+  @Mutation(() => Book)
+  @UseMiddleware(isAuth)
+  async addBook(
+    @Arg('name', () => String) name: string,
+    @Ctx() { payload }: context
+  ) {
+    // create book
+    const book = Book.create({
+      name,
+      userId: payload!.userId
+    });
+
+    return book;
   }
 }
