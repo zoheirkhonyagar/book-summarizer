@@ -135,14 +135,19 @@ export class UserResolver {
 
   @FieldResolver(() => [Book])
   async books(@Root() user: User) {
-    // get and convert userId to string
-    const userId: string = user._id.toString();
+    try {
+      // get and convert userId to string
+      const userId: string = user._id.toString();
 
-    // get all user books
-    const books = await Book.find({
-      userId
-    });
+      // get all user books
+      const books = await Book.find({
+        userId
+      });
 
-    return books;
+      return books;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
 }
