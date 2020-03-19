@@ -9,6 +9,8 @@ import {
 import { isAuth } from './../middlewares/isAuthMiddleware';
 import { context } from './../interfaces/context';
 import { Book } from './../entity/Book';
+import { getMongoManager } from 'typeorm';
+// import { getMongoManager } from 'typeorm';
 // import { getMongoManager } from 'typeorm';
 
 @Resolver()
@@ -30,7 +32,7 @@ export class BookResolver {
 
   @Mutation(() => Book)
   @UseMiddleware(isAuth)
-  async addBook(
+  async createBook(
     @Arg('name', () => String) name: string,
     @Ctx() { payload }: context
   ) {
@@ -40,6 +42,13 @@ export class BookResolver {
       userId: payload!.userId
     });
 
+    // get instance of mongo manager
+    const manager = getMongoManager();
+
+    // save book into db
+    await manager.save(book);
+
+    console.log(book);
     return book;
   }
 }
