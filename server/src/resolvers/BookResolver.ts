@@ -10,8 +10,6 @@ import { isAuth } from './../middlewares/isAuthMiddleware';
 import { context } from './../interfaces/context';
 import { Book } from './../entity/Book';
 import { getMongoManager } from 'typeorm';
-// import { getMongoManager } from 'typeorm';
-// import { getMongoManager } from 'typeorm';
 
 @Resolver()
 export class BookResolver {
@@ -19,11 +17,12 @@ export class BookResolver {
   @UseMiddleware(isAuth)
   async books(@Ctx() { payload }: context) {
     try {
-      return await Book.find({
-        where: {
-          userId: payload!.userId
-        }
+      // get all user books by usserId
+      const books = await Book.find({
+        userId: payload!.userId
       });
+
+      return books;
     } catch (error) {
       console.log(error);
       return error;
