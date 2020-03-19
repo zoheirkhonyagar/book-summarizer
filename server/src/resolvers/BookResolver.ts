@@ -4,15 +4,18 @@ import {
   UseMiddleware,
   Ctx,
   Mutation,
-  Arg
+  Arg,
+  FieldResolver,
+  Root
 } from 'type-graphql';
 import { isAuth } from './../middlewares/isAuthMiddleware';
 import { context } from './../interfaces/context';
 import { Book } from './../entity/Book';
 import { getMongoManager } from 'typeorm';
 import { ObjectId } from 'mongodb';
+import { User } from './../entity/User';
 
-@Resolver()
+@Resolver(_of => Book)
 export class BookResolver {
   @Query(() => Book)
   @UseMiddleware(isAuth)
@@ -75,6 +78,22 @@ export class BookResolver {
 
       return book;
     } catch (error) {
+      return error;
+    }
+  }
+
+  @FieldResolver(() => User)
+  async user(@Root() book: Book) {
+    try {
+      // get book user id
+      const userId: string = book.userId;
+
+      // find user by userId
+      const user = await User.findOne(userId);
+
+      return user;
+    } catch (error) {
+      console.log(error);
       return error;
     }
   }

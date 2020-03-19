@@ -4,7 +4,7 @@ import { isAuth } from './../middlewares/isAuthMiddleware';
 import { context } from './../interfaces/context';
 import { ObjectId } from 'mongodb';
 
-@Resolver()
+@Resolver(_of => Quote)
 export class QuoteResolver {
   @Query(() => Quote)
   @UseMiddleware(isAuth)
