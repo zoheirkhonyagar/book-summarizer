@@ -11,6 +11,7 @@ import { User } from './entity/User';
 import { createAccessToken, createRefreshToken } from './utils/auth';
 import { sendRefreshToken } from './utils/sendRefreshToken';
 import { BookResolver } from './resolvers/BookResolver';
+import { QuoteResolver } from './resolvers/QuoteResolver';
 
 (async () => {
   // initial express app
@@ -76,7 +77,7 @@ import { BookResolver } from './resolvers/BookResolver';
   // create apollo server
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, BookResolver]
+      resolvers: [UserResolver, BookResolver, QuoteResolver]
     }),
     context: ({ req, res }) => ({ req, res })
   });

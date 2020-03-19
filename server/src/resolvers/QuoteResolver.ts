@@ -1,8 +1,16 @@
-import { Resolver, Query, UseMiddleware, Arg, Ctx } from 'type-graphql';
+import {
+  Resolver,
+  Query,
+  UseMiddleware,
+  Arg,
+  Ctx,
+  Mutation
+} from 'type-graphql';
 import { Quote } from './../entity/Quote';
 import { isAuth } from './../middlewares/isAuthMiddleware';
 import { context } from './../interfaces/context';
 import { ObjectId } from 'mongodb';
+import { getMongoManager } from 'typeorm';
 
 @Resolver(_of => Quote)
 export class QuoteResolver {
@@ -17,7 +25,7 @@ export class QuoteResolver {
       });
 
       if (!quote) {
-        throw new Error('book not found');
+        throw new Error('quote not found');
       }
 
       return quote;
@@ -39,6 +47,34 @@ export class QuoteResolver {
       return quotes;
     } catch (error) {
       console.log(error);
+      return error;
+    }
+  }
+
+  @Mutation(() => Quote)
+  @UseMiddleware(isAuth)
+  async createQuote(
+    @Arg('text', () => String) text: string,
+    @Arg('bookId', () => String) bookId: string,
+    @Ctx() { payload }: context
+  ) {
+    try {
+      // create Quote
+      const quote = Quote.create({
+        text,
+        bookId,
+        userId: payload!.userId
+      });
+
+      // get instance of mongo manager
+      const manager = getMongoManager();
+
+      // save quote into db
+      await manager.save(quote);
+      console.log(quote);
+
+      return quote;
+    } catch (error) {
       return error;
     }
   }
