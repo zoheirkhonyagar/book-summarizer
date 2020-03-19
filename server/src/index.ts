@@ -3,15 +3,13 @@ import 'reflect-metadata';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
-import { UserResolver } from './resolvers/UserResolver';
 import { createConnection } from 'typeorm';
 import cookieParser from 'cookie-parser';
 import { verify } from 'jsonwebtoken';
 import { User } from './entity/User';
 import { createAccessToken, createRefreshToken } from './utils/auth';
 import { sendRefreshToken } from './utils/sendRefreshToken';
-import { BookResolver } from './resolvers/BookResolver';
-import { QuoteResolver } from './resolvers/QuoteResolver';
+import resolvers from './resolvers';
 
 (async () => {
   // initial express app
@@ -77,7 +75,7 @@ import { QuoteResolver } from './resolvers/QuoteResolver';
   // create apollo server
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, BookResolver, QuoteResolver]
+      resolvers
     }),
     context: ({ req, res }) => ({ req, res })
   });
